@@ -42,5 +42,13 @@ using (var scope = app.Services.CreateScope())
     var dbContext = services.GetRequiredService<AppDbContext>();
     dbContext.Database.EnsureCreated();
 }
+app.MapGet("/healthz", () => "Healthy");
+var uploadsPath = Path.Combine(app.Environment.WebRootPath, "uploads");
+Directory.CreateDirectory(uploadsPath);
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.EnsureCreated(); // Creates DB if missing
+}
 app.Run();
