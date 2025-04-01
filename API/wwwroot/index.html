@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Todo App</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
+        .todo-list { list-style: none; padding: 0; }
+        .todo-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
+        .completed { text-decoration: line-through; color: #888; }
+        #new-todo { padding: 8px; width: 70%; }
+        button { padding: 8px 15px; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Todo App</h1>
+    <div>
+        <input type="text" id="new-todo" placeholder="Add a new todo">
+        <button onclick="addTodo()">Add</button>
+    </div>
+    <ul id="todo-list" class="todo-list"></ul>
+
+    <script>
+        // Load todos when page loads
+        document.addEventListener('DOMContentLoaded', loadTodos);
+
+        async function loadTodos() {
+            try {
+                const response = await fetch('/api/todo');
+                if (!response.ok) throw new Error('API request failed');
+                const todos = await response.json();
+                renderTodos(todos);
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to load todos');
+            }
+        }
+
+        function renderTodos(todos) {
+            const list = document.getElementById('todo-list');
+            list.innerHTML = '';
+            
+            todos.forEach(todo => {
+                const li = document.createElement('li');
+                li.className = `todo-item ${todo.isComplete ? 'completed' : ''}`;
+                
+                li.innerHTML = `
+                    <span>${todo.name}</span>
+                    <div>
+                        <button onclick="toggleTodo(${todo.id})">Toggle</button>
+                        <button onclick="deleteTodo(${todo.id})">Delete</button>
+                    </div>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        async function addTodo() {
+            const input = document.getElementById('new-todo');
+            const name = input.value.trim();
+            
+            if (name) {
+                try {
+                    await fetch('/api/todo', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ name, isComplete: false })
+                    });
+                    input.value = '';
+                    loadTodos();
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Failed to add todo');
+                }
+            }
+        }
+
+        async function toggleTodo(id) {
+            try {
+                const response = await fetch(`/api/todo/${id}`);
+                if (!response.ok) throw new Error('Todo not found');
+                const todo = await response.json();
+                
+                await fetch(`/api/todo/${id}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ...todo, isComplete: !todo.isComplete })
+                });
+                loadTodos();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to update todo');
+            }
+        }
+
+        async function deleteTodo(id) {
+            try {
+                await fetch(`/api/todo/${id}`, { method: 'DELETE' });
+                loadTodos();
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Failed to delete todo');
+            }
+        }
+    </script>
+</body>
+</html>
