@@ -2,14 +2,7 @@
 <html>
 <head>
     <title>Todo App</title>
-    <style>
-        body { font-family: Arial, sans-serif; max-width: 800px; margin: 0 auto; padding: 20px; }
-        .todo-list { list-style: none; padding: 0; }
-        .todo-item { display: flex; justify-content: space-between; padding: 10px; border-bottom: 1px solid #eee; }
-        .completed { text-decoration: line-through; color: #888; }
-        #new-todo { padding: 8px; width: 70%; }
-        button { padding: 8px 15px; cursor: pointer; }
-    </style>
+    <link rel="stylesheet" href="/css/styles.css">
 </head>
 <body>
     <h1>Todo App</h1>
@@ -20,7 +13,7 @@
     <ul id="todo-list" class="todo-list"></ul>
 
     <script>
-        // Load todos when page loads
+        // Your existing JavaScript code
         document.addEventListener('DOMContentLoaded', loadTodos);
 
         async function loadTodos() {
@@ -46,8 +39,8 @@
                 li.innerHTML = `
                     <span>${todo.name}</span>
                     <div>
-                        <button onclick="toggleTodo(${todo.id})">Toggle</button>
-                        <button onclick="deleteTodo(${todo.id})">Delete</button>
+                        <button class="toggle" onclick="toggleTodo(${todo.id})">Toggle</button>
+                        <button class="delete" onclick="deleteTodo(${todo.id})">Delete</button>
                     </div>
                 `;
                 list.appendChild(li);

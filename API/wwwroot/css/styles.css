@@ -1,0 +1,49 @@
+.delete {
+    background-color: red;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+.toggle {
+    background-color: rgb(0, 102, 255);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-left: 8px;
+}
+
+/* Add these styles to match your inline styles */
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.todo-list {
+    list-style: none;
+    padding: 0;
+}
+
+.todo-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+.completed {
+    text-decoration: line-through;
+    color: #888;
+}
+
+#new-todo {
+    padding: 8px;
+    width: 70%;
+}
+
+button {
+    padding: 8px 15px;
+    cursor: pointer;
+}
